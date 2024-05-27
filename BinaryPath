@@ -1,0 +1,132 @@
+import java.util.Scanner;
+
+
+/**
+* Trying to solve this problem in java 
+* https://codeforces.com/problemset/problem/1937/B
+* Two outputs are required: 
+* below program is printing the first output correctly
+* second output - which is about all possible paths - needs to be worked upon
+*/
+public class BinaryPath {
+
+    static int[] input1;
+    static int[] input2;
+
+    public static int nearestZerolocation(int[] arr, int start) {
+        if ( start > arr.length) {
+            return arr.length;
+        }
+        for ( int i= start -1; i< arr.length; i++) {
+            if ( arr[i] == 0){
+                return i+1;
+            }
+        }
+        return arr.length;
+    }
+
+    public static String SubString(int[] arr, int start, int end) {
+        StringBuffer buff = new StringBuffer();
+        for ( int i= start; i<= end; i++) {
+            buff.append(arr[i-1]);
+        }
+        return buff.toString();
+    }
+
+    public static StringBuffer recurseOutput(StringBuffer output, int first_row_zero, int second_row_zero, int[] input1, int[] input2){
+
+        System.out.println("FIRSTZEROLOCATION:" + first_row_zero);
+        System.out.println("SECONDZEROLOCATION:" + second_row_zero);
+
+        if (first_row_zero == second_row_zero ){
+            //System.out.println("WOW Equal:" + first_row_zero + ":" + paths);
+            //paths=2*paths;
+        }
+
+        if (first_row_zero <= second_row_zero) {
+
+
+            if (first_row_zero == input1.length){
+               System.out.println("ADDING-EQUAL-INPUT1:"+input1[input1.length-1]);
+               System.out.println("ADDING-EQUAL-INPUT2:"+input2[input2.length-1]);
+                output.append(input1[input1.length-1]);
+                output.append(input2[input2.length-1]);
+                return output;
+            }
+            System.out.println("ADDING:" + SubString(input1,location,first_row_zero));
+            output.append(SubString(input1,location,first_row_zero));
+            location = first_row_zero +1;
+            first_row_zero = nearestZerolocation(input1,location);
+            second_row_zero = nearestZerolocation(input2,location);
+            recurseOutput(output,first_row_zero,second_row_zero, input1, input2);
+        }
+        else{
+
+            if ( second_row_zero == input2.length) {
+                System.out.println("ADDING-EQUAL-INPUT2:" + input2[input2.length - 1]);
+                output.append(input2[input2.length - 1]);
+                return output;
+            }
+
+            int first =   Integer.valueOf(SubString(input1,location,second_row_zero)+ SubString(input2,second_row_zero,input2.length));
+            int second =  Integer.valueOf(SubString(input2,location-1,second_row_zero -1)+SubString(input2,second_row_zero ,input2.length));
+            System.out.println("FIRSTvsSECOND:" + first + ":second:" + second);
+            if ( first == second) {
+                paths = paths*2;
+            }
+
+            if ( first < second){
+                System.out.println("ADDING1-FIRST:" + SubString(input1,location,second_row_zero));
+                System.out.println("ADDING1-SECOND:" + SubString(input2,second_row_zero,input2.length));
+                output.append(SubString(input1,location,second_row_zero)).append(SubString(input2,second_row_zero,input2.length));
+            }
+            else{
+                System.out.println("ADDING2-FIRST:" + SubString(input2,location-1,second_row_zero));
+                System.out.println("ADDING2-SECOND:" + SubString(input2,second_row_zero,input2.length));
+                output.append(SubString(input2,location-1,second_row_zero -1)).append(SubString(input2,second_row_zero,input2.length));
+            }
+        }
+        return output;
+    }
+
+    static int location = 1;
+    static int paths = 1;
+
+
+    //input - number of cases
+    //number of digits in each case e.g. 8
+    //enter 11000111
+    //enter 11111001
+    public static void main(String[] args) {
+
+        Scanner myObj2 = new Scanner(System.in);
+        int cases = Integer.valueOf(myObj2.nextLine());
+        while(cases-- > 0 ) {
+            Scanner scanSize = new Scanner(System.in);
+            String scanSizeStr = scanSize.nextLine();
+            location = 1;
+            paths = 1;
+            Scanner myObj = new Scanner(System.in);
+            String input1String = myObj.nextLine();
+            String input2String = myObj.nextLine();
+
+            int[] input1 = new int[input1String.length()];
+            int[] input2 = new int[input2String.length()];
+            char[] input1Char = input1String.toCharArray();
+            char[] input2Char = input2String.toCharArray();
+            for (int i = 0; i < input1String.length(); i++) {
+                input1[i] = Integer.valueOf("" + input1Char[i]);
+                input2[i] = Integer.valueOf("" + input2Char[i]);
+            }
+            int first_row_zero = nearestZerolocation(input1, 1);
+            int second_row_zero = nearestZerolocation(input2, 1);
+            StringBuffer output = new StringBuffer();
+            output = recurseOutput(output, first_row_zero, second_row_zero, input1, input2);
+            System.out.println(output.toString());
+            System.out.println(paths);
+        }
+
+    }
+
+
+}

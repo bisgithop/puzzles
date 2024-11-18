@@ -1,4 +1,25 @@
 import time
 
-def dist(x1,x2, x,y)
+def dist(x1,x2, x,y):
+  if x == 0:
+    return y
+  if y == 0:
+    return x
   
+  if x1[x-1] == x2[y-1]:
+    return dist( x1, x2, x-1, y-1)
+
+  return 1 + min( dist(x1,x2,x,y-1),
+                  dist(x1,x2,x-1,y),
+                  dist(x1,x2,x-1,y-1)
+                )
+
+def distance(x1,x2):
+  return dist(x1,x2,len(x1), len(x2))
+
+s1 = "helloween!"
+s2 = "hellwin!"
+time1 = time.time()
+print(distance(s1,s2))
+time2 = time.time()
+print("time", time2-time1)

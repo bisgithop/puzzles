@@ -1,0 +1,4 @@
+import time
+
+def dist(x1,x2, x,y)
+  
